@@ -1,97 +1,81 @@
 ---
 title: "Introduction"
-description: "Welcome to the new home for your documentation"
+description: "Welcome to the ReferralLoop API documentation"
 ---
 
-## Setting up
+## Getting Started
 
-Get your documentation site up and running in minutes.
+Integrate waitlist and referral functionality into your application with the ReferralLoop API.
 
 <Card
-  title="Start here"
+  title="Quick Start Guide"
   icon="rocket"
-  href="/quickstart"
+  href="/getting-started"
   horizontal
 >
-  Follow our three step quickstart guide.
+  Get up and running with the API in minutes. Learn how to generate your API key
+  and make your first request.
 </Card>
 
-## Make it yours
+## Essential Guides
 
-Design a docs site that looks great and empowers your users.
+Everything you need to start building with the ReferralLoop API.
 
 <Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+  <Card title="Authentication" icon="key" href="essentials/authentication">
+    Learn how to authenticate your API requests with API keys.
   </Card>
   <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
+    title="API Reference"
     icon="terminal"
     href="/api-reference/introduction"
   >
-    Auto-generate API documentation from OpenAPI specifications.
+    Complete reference for all API endpoints and operations.
+  </Card>
+  <Card title="Rate Limits" icon="gauge" href="essentials/rate-limit">
+    Understand rate limits and how they vary by plan.
+  </Card>
+  <Card
+    title="Error Handling"
+    icon="triangle-exclamation"
+    href="essentials/error-codes"
+  >
+    Learn about error codes and how to handle API errors.
   </Card>
 </Columns>
 
-## Create beautiful pages
+## API Endpoints
 
-Everything you need to create world-class documentation.
+Explore the available endpoints to manage your waitlists and signups.
 
 <Columns cols={2}>
   <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
+    title="Waitlists"
+    icon="list"
+    href="api-reference/endpoint/waitlists/list"
   >
-    Use MDX to style your docs pages.
+    List and manage your waitlists programmatically.
   </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
+  <Card title="Signups" icon="users" href="api-reference/endpoint/signups/list">
+    Create, retrieve, and delete signups via the API.
   </Card>
 </Columns>
 
-## Need inspiration?
+# Integrations
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
+Explore the available integrations ReferralLoop provides
+
+<Columns cols={2}>
+  <Card title="Zapier" icon="plug" href="integrations/zapier">
+    Learn more about Zapier integration
+  </Card>
+  <Card title="Webhooks" icon="webhook" href="integrations/webhooks">
+    Connect to our webhooks
+  </Card>
+</Columns>
+
+## Need Help?
+
+<Card title="Get Support" icon="headset" href="https://www.referralloop.dev">
+  Visit our website for additional resources and support.
 </Card>

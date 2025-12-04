@@ -1,0 +1,173 @@
+---
+title: Zapier Integration
+description: Connect ReferralLoop to 5,000+ apps with Zapier
+---
+
+## Overview
+
+Zapier is a no-code automation platform that connects ReferralLoop to thousands of popular apps. Build workflows (Zaps) that automate tasks between ReferralLoop and your favorite tools.
+
+## Getting Started
+
+### Step 1: Get Your API Key
+
+1. Log in to your [ReferralLoop dashboard](https://www.referralloop.dev/dashboard)
+2. Navigate to **API Keys** in the sidebar
+3. Click **Create API Key**
+4. Give your key a descriptive name (e.g., "Zapier Integration")
+5. **Copy the API key immediately** - you won't be able to see it again
+
+<Warning>
+  Keep your API keys secure. Never share them publicly or commit them to version
+  control.
+</Warning>
+
+### Step 2: Connect to Zapier
+
+1. Go to the [ReferralLoop app on Zapier](https://zapier.com/apps/referralloop/integrations)
+2. Click **Connect ReferralLoop**
+3. Enter your API key when prompted
+4. Test the connection
+
+## Triggers
+
+Triggers are events in ReferralLoop that start your Zap.
+
+### New Signup
+
+Triggers when someone joins a waitlist.
+
+**Use cases:**
+
+- Send a welcome email when someone signs up
+- Add new signups to your CRM
+- Post a notification in Slack
+- Create a record in Airtable
+
+**Example Zap:**
+
+```
+ReferralLoop: New Signup → Gmail: Send Email
+```
+
+### Position Changed
+
+Triggers when someone's position in the waitlist moves up.
+
+**Use cases:**
+
+- Notify users when they move up in line
+- Update a spreadsheet with position changes
+- Send a congratulatory message
+
+**Example Zap:**
+
+```
+ReferralLoop: Position Changed → Google Sheets: Add Row
+```
+
+## Actions
+
+Actions are things your Zap can do in ReferralLoop.
+
+### Add to Waitlist
+
+Adds a new person to your waitlist.
+
+**Use cases:**
+
+- Add form submissions to your waitlist
+- Import contacts from your CRM
+- Sync signups from another platform
+
+**Example Zap:**
+
+```
+Typeform: New Submission → ReferralLoop: Add to Waitlist
+```
+
+## Popular Workflows
+
+Here are some popular Zap templates to get you started:
+
+<CardGroup cols={2}>
+  <Card title="Typeform → ReferralLoop" icon="form">
+    Automatically add form submissions to your waitlist
+  </Card>
+  <Card title="ReferralLoop → Mailchimp" icon="envelope">
+    Add new signups to your email marketing list
+  </Card>
+  <Card title="ReferralLoop → Slack" icon="slack">
+    Get notified in Slack when someone joins
+  </Card>
+  <Card title="ReferralLoop → Google Sheets" icon="table">
+    Log all signups to a spreadsheet
+  </Card>
+  <Card title="ReferralLoop → Airtable" icon="database">
+    Sync waitlist data to Airtable
+  </Card>
+  <Card title="ReferralLoop → HubSpot" icon="address-book">
+    Create contacts in HubSpot from signups
+  </Card>
+</CardGroup>
+
+## Best Practices
+
+### Organize Your Zaps
+
+- Use descriptive names for your Zaps
+- Group related Zaps with folders
+- Document what each Zap does
+
+### Handle Errors
+
+- Set up error notifications
+- Monitor failed Zaps regularly
+- Test your Zaps before going live
+
+### Optimize Performance
+
+- Use filters to reduce unnecessary triggers
+- Batch operations when possible
+- Monitor your Zap usage
+
+## Troubleshooting
+
+### Connection Issues
+
+If you can't connect to ReferralLoop:
+
+1. Verify your API key is correct
+2. Check that your API key hasn't been revoked
+3. Ensure you have a paid plan (API access requires a paid subscription)
+
+### Zap Not Triggering
+
+If your Zap isn't triggering:
+
+1. Check that the trigger conditions are met
+2. Verify the waitlist ID is correct
+3. Ensure the Zap is turned on
+4. Check Zapier's task history for errors
+
+### Data Not Appearing
+
+If data isn't appearing as expected:
+
+1. Check field mappings in your Zap
+2. Verify the data format matches expectations
+3. Review Zapier's task history for details
+
+## Need Help?
+
+<Card title="Zapier Support" icon="headset" href="https://zapier.com/help">
+  Get help from Zapier's support team
+</Card>
+
+<Card
+  title="ReferralLoop Support"
+  icon="question-circle"
+  href="https://www.referralloop.dev"
+>
+  Contact us for ReferralLoop-specific questions
+</Card>

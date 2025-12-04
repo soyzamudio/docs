@@ -1,0 +1,361 @@
+---
+title: Webhooks
+description: Build custom integrations with webhooks
+---
+
+## Overview
+
+Webhooks allow you to receive real-time notifications when events occur in ReferralLoop. This is perfect for building custom integrations, processing events server-side, or triggering actions in your own applications.
+
+## How Webhooks Work
+
+1. **Subscribe** to events you want to receive
+2. **Receive** HTTP POST requests when events occur
+3. **Process** the webhook payload in your application
+4. **Respond** with a 2xx status code to acknowledge receipt
+
+## Available Events
+
+### signup.created
+
+Triggered when a new signup is added to a waitlist.
+
+**Payload:**
+
+```json
+{
+  "event_type": "signup.created",
+  "waitlist_id": "123e4567-e89b-12d3-a456-426614174000",
+  "data": {
+    "id": "789e0123-e89b-12d3-a456-426614174000",
+    "email": "user@example.com",
+    "name": "John Doe",
+    "position": 1,
+    "referral_code": "ABC123",
+    "created_at": "2024-01-15T10:00:00Z"
+  },
+  "timestamp": "2024-01-15T10:00:00Z"
+}
+```
+
+### signup.position_changed
+
+Triggered when a signup's position in the waitlist changes.
+
+**Payload:**
+
+```json
+{
+  "event_type": "signup.position_changed",
+  "waitlist_id": "123e4567-e89b-12d3-a456-426614174000",
+  "data": {
+    "id": "789e0123-e89b-12d3-a456-426614174000",
+    "email": "user@example.com",
+    "old_position": 10,
+    "new_position": 5,
+    "position_change": -5
+  },
+  "timestamp": "2024-01-15T10:00:00Z"
+}
+```
+
+### signup.deleted
+
+Triggered when a signup is removed from a waitlist.
+
+**Payload:**
+
+```json
+{
+  "event_type": "signup.deleted",
+  "waitlist_id": "123e4567-e89b-12d3-a456-426614174000",
+  "data": {
+    "id": "789e0123-e89b-12d3-a456-426614174000",
+    "email": "user@example.com"
+  },
+  "timestamp": "2024-01-15T10:00:00Z"
+}
+```
+
+## Setting Up Webhooks
+
+### Step 1: Create a Webhook Endpoint
+
+Create an HTTP endpoint in your application that can receive POST requests:
+
+```javascript
+// Express.js example
+app.post("/webhooks/referralloop", async (req, res) => {
+  const { event_type, waitlist_id, data, timestamp } = req.body;
+
+  // Process the webhook
+  console.log(`Received ${event_type} event:`, data);
+
+  // Always respond with 2xx to acknowledge receipt
+  res.status(200).json({ received: true });
+});
+```
+
+### Step 2: Subscribe to Events
+
+Use the API to subscribe to events:
+
+<Endpoint method="POST" url="/webhooks/subscribe" />
+
+**Request Body:**
+
+<ParamField name="event_type" type="string" required>
+  The type of event to subscribe to. Must be one of: `signup.created`,
+  `signup.position_changed`, `signup.deleted`
+</ParamField>
+
+<ParamField name="target_url" type="string" required>
+  The URL where webhooks should be sent. Must be a publicly accessible HTTPS
+  endpoint.
+</ParamField>
+
+<ParamField name="waitlist_id" type="string">
+  Optional. If provided, only events for this specific waitlist will be sent. If
+  omitted, events for all waitlists in your workspace will be sent.
+</ParamField>
+
+**Example Request:**
+
+```bash
+curl -X POST "https://www.referralloop.dev/api/v1/webhooks/subscribe" \
+  -H "Authorization: Bearer pk_live_YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "event_type": "signup.created",
+    "target_url": "https://your-app.com/webhooks/referralloop",
+    "waitlist_id": "123e4567-e89b-12d3-a456-426614174000"
+  }'
+```
+
+**Example Response:**
+
+```json
+{
+  "subscription": {
+    "id": "sub_1234567890",
+    "event_type": "signup.created",
+    "target_url": "https://your-app.com/webhooks/referralloop",
+    "is_active": true,
+    "created_at": "2024-01-15T10:00:00Z"
+  }
+}
+```
+
+### Step 3: Handle Webhook Requests
+
+Your endpoint should:
+
+1. **Verify the request** (optional, see Security below)
+2. **Process the event** based on `event_type`
+3. **Respond quickly** with a 2xx status code
+4. **Handle errors gracefully** - return 2xx even if processing fails (process asynchronously)
+
+**Example Handler:**
+
+```javascript
+app.post("/webhooks/referralloop", async (req, res) => {
+  const { event_type, waitlist_id, data, timestamp } = req.body;
+
+  // Always acknowledge receipt immediately
+  res.status(200).json({ received: true });
+
+  // Process asynchronously
+  processWebhookEvent(event_type, waitlist_id, data, timestamp);
+});
+
+async function processWebhookEvent(eventType, waitlistId, data, timestamp) {
+  switch (eventType) {
+    case "signup.created":
+      await handleNewSignup(data);
+      break;
+    case "signup.position_changed":
+      await handlePositionChange(data);
+      break;
+    case "signup.deleted":
+      await handleSignupDeleted(data);
+      break;
+  }
+}
+```
+
+## Unsubscribing
+
+To stop receiving webhooks, delete the subscription:
+
+<Endpoint method="DELETE" url="/webhooks/unsubscribe/{subscriptionId}" />
+
+**Example Request:**
+
+```bash
+curl -X DELETE "https://www.referralloop.dev/api/v1/webhooks/unsubscribe/sub_1234567890" \
+  -H "Authorization: Bearer pk_live_YOUR_API_KEY"
+```
+
+## Security
+
+### Webhook Signatures (Coming Soon)
+
+Webhook signatures allow you to verify that requests are coming from ReferralLoop. When available, webhook payloads will include an `X-Webhook-Signature` header:
+
+```
+X-Webhook-Signature: sha256=abc123...
+```
+
+**Verification Example:**
+
+```javascript
+const crypto = require("crypto");
+
+function verifyWebhookSignature(payload, signature, secret) {
+  const expectedSignature = crypto
+    .createHmac("sha256", secret)
+    .update(JSON.stringify(payload))
+    .digest("hex");
+
+  return crypto.timingSafeEqual(
+    Buffer.from(signature),
+    Buffer.from(expectedSignature)
+  );
+}
+```
+
+### Best Practices
+
+- **Use HTTPS** - Always use HTTPS endpoints for webhooks
+- **Validate payloads** - Verify the structure and content of webhook payloads
+- **Idempotency** - Make your webhook handlers idempotent to handle duplicate deliveries
+- **Timeout handling** - Respond quickly (within 5 seconds) to avoid retries
+- **Error handling** - Log errors but return 2xx to prevent retries for transient issues
+
+## Retry Logic
+
+If your endpoint doesn't respond with a 2xx status code, ReferralLoop will retry the webhook:
+
+- **Initial attempt**: Immediate
+- **Retry 1**: After 1 minute
+- **Retry 2**: After 5 minutes
+- **Retry 3**: After 15 minutes
+- **Retry 4**: After 1 hour
+
+After all retries are exhausted, the webhook delivery is marked as failed.
+
+## Testing Webhooks
+
+### Using ngrok
+
+1. Install [ngrok](https://ngrok.com/)
+2. Start your local server
+3. Expose it with ngrok: `ngrok http 3000`
+4. Use the ngrok URL as your `target_url`
+
+### Using RequestBin
+
+1. Go to [RequestBin](https://requestbin.com/)
+2. Create a new bin
+3. Use the bin URL as your `target_url`
+4. View incoming webhooks in the RequestBin dashboard
+
+## Troubleshooting
+
+### Webhooks Not Arriving
+
+1. **Check subscription status** - Verify the subscription is active
+2. **Verify endpoint** - Ensure your endpoint is publicly accessible
+3. **Check HTTPS** - Webhooks require HTTPS endpoints
+4. **Review logs** - Check your application logs for errors
+5. **Test endpoint** - Manually POST to your endpoint to verify it works
+
+### Duplicate Webhooks
+
+If you receive duplicate webhooks:
+
+- Implement idempotency using the `timestamp` or event ID
+- Check if your endpoint is responding slowly (causing retries)
+- Verify you don't have multiple subscriptions for the same event
+
+### Webhook Delivery Failures
+
+If webhooks are failing:
+
+- Check your endpoint is returning 2xx status codes
+- Verify your endpoint is accessible from the internet
+- Review error logs for details
+- Test your endpoint manually
+
+## Code Examples
+
+### Node.js/Express
+
+```javascript
+const express = require("express");
+const app = express();
+
+app.use(express.json());
+
+app.post("/webhooks/referralloop", (req, res) => {
+  const { event_type, waitlist_id, data, timestamp } = req.body;
+
+  // Acknowledge immediately
+  res.status(200).json({ received: true });
+
+  // Process asynchronously
+  handleWebhook(event_type, data);
+});
+
+function handleWebhook(eventType, data) {
+  switch (eventType) {
+    case "signup.created":
+      console.log("New signup:", data.email);
+      // Add to your system
+      break;
+    case "signup.position_changed":
+      console.log("Position changed:", data);
+      // Update your system
+      break;
+  }
+}
+
+app.listen(3000);
+```
+
+### Python/Flask
+
+```python
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+@app.route('/webhooks/referralloop', methods=['POST'])
+def webhook():
+    payload = request.json
+    event_type = payload['event_type']
+    data = payload['data']
+
+    # Acknowledge immediately
+    response = jsonify({'received': True})
+
+    # Process asynchronously
+    handle_webhook(event_type, data)
+
+    return response, 200
+
+def handle_webhook(event_type, data):
+    if event_type == 'signup.created':
+        print(f"New signup: {data['email']}")
+    elif event_type == 'signup.position_changed':
+        print(f"Position changed: {data}")
+
+if __name__ == '__main__':
+    app.run(port=3000)
+```
+
+## Next Steps
+
+<Card title="API Reference" icon="terminal" href="/api-reference/introduction">
+  Explore the full API reference for more integration options
+</Card>

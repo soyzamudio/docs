@@ -161,7 +161,8 @@ curl -X POST "https://www.referralloop.dev/api/v1/waitlists/WAITLIST_ID/signups"
 ```
 
 <Warning>
-  If the email already exists on the waitlist, you'll receive a `409 Conflict` response with the existing signup information.
+  If the email already exists on the waitlist, you'll receive a `409 Conflict`
+  response with the existing signup information.
 </Warning>
 
 ---
@@ -236,4 +237,3 @@ Returns `204 No Content` on success.
 <ResponseField name="metadata" type="object">
   Custom metadata associated with the signup
 </ResponseField>
-
