@@ -1,33 +1,39 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: API Reference
+description: Complete API reference for ReferralLoop
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## Overview
 
-## Welcome
+The ReferralLoop API is a RESTful API that allows you to manage waitlists and signups programmatically.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+## Base URL
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
-
-## Authentication
-
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
-
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
 ```
+https://www.referralloop.dev/api/v1
+```
+
+## Response Format
+
+All API responses are returned in JSON format. Successful responses include the requested data, while errors include an `error` field with a description.
+
+## Rate Limits
+
+Rate limits are enforced per workspace and vary by plan. See [Rate Limits](/rate-limits) for details.
+
+## Rate Limit Headers
+
+Every API response includes rate limit information in the headers:
+
+- `X-RateLimit-Limit`: Maximum number of requests allowed
+- `X-RateLimit-Remaining`: Number of requests remaining in the current window
+- `X-RateLimit-Reset`: ISO 8601 timestamp when the rate limit resets
+
+## Endpoints
+
+The API provides endpoints for:
+
+- **Waitlists**: List and manage your waitlists
+- **Signups**: Create, list, and delete signups
+
+Explore the endpoints in the navigation menu to see detailed documentation for each.

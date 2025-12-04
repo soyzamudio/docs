@@ -1,0 +1,60 @@
+---
+title: Authentication
+description: Learn how to authenticate API requests
+---
+
+## Overview
+
+All API requests must be authenticated using a Bearer token in the Authorization header.
+
+## Authentication Header
+
+Include your API key in the `Authorization` header of every request:
+
+```
+Authorization: Bearer pk_live_YOUR_API_KEY
+```
+
+## Example
+
+Here's an example of an authenticated request:
+
+```bash
+curl https://www.referralloop.dev/api/v1/waitlists \
+  -H "Authorization: Bearer pk_live_YOUR_API_KEY"
+```
+
+## API Key Format
+
+API keys follow this format:
+
+- **Live keys**: `pk_live_...`
+- **Test keys**: `pk_test_...` (if available)
+
+## Security Best Practices
+
+<Warning>
+  **Never expose your API keys:** - Don't commit them to version control - Don't
+  include them in client-side code - Don't share them publicly - Rotate them if
+  compromised
+</Warning>
+
+## Invalid API Key
+
+If you use an invalid API key, you'll receive a `401 Unauthorized` response:
+
+```json
+{
+  "error": "Invalid API key"
+}
+```
+
+## Missing Authorization Header
+
+If you don't include the Authorization header, you'll receive:
+
+```json
+{
+  "error": "Missing or invalid authorization header"
+}
+```

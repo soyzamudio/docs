@@ -1,0 +1,239 @@
+---
+title: Signups
+description: Manage signups via the API
+---
+
+## List Signups
+
+Retrieve all signups for a specific waitlist.
+
+<Endpoint method="GET" url="/waitlists/{waitlistId}/signups" />
+
+### Path Parameters
+
+<ParamField name="waitlistId" type="string" required>
+  The ID of the waitlist
+</ParamField>
+
+### Query Parameters
+
+<ParamField name="limit" type="number" default="100" max="1000">
+  Number of results to return (default: 100, max: 1000)
+</ParamField>
+
+<ParamField name="offset" type="number" default="0">
+  Pagination offset (default: 0)
+</ParamField>
+
+### Example Request
+
+```bash
+curl "https://www.referralloop.dev/api/v1/waitlists/WAITLIST_ID/signups?limit=50" \
+  -H "Authorization: Bearer pk_live_YOUR_API_KEY"
+```
+
+### Example Response
+
+```json
+{
+  "signups": [
+    {
+      "id": "789e0123-e89b-12d3-a456-426614174000",
+      "email": "user@example.com",
+      "name": "John Doe",
+      "position": 1,
+      "referral_code": "ABC123",
+      "referral_count": 5,
+      "status": "waiting",
+      "created_at": "2024-01-15T10:00:00Z"
+    }
+  ],
+  "total": 150,
+  "limit": 50,
+  "offset": 0
+}
+```
+
+---
+
+## Get Signup
+
+Retrieve a specific signup by ID.
+
+<Endpoint method="GET" url="/waitlists/{waitlistId}/signups/{signupId}" />
+
+### Path Parameters
+
+<ParamField name="waitlistId" type="string" required>
+  The ID of the waitlist
+</ParamField>
+
+<ParamField name="signupId" type="string" required>
+  The ID of the signup
+</ParamField>
+
+### Example Request
+
+```bash
+curl "https://www.referralloop.dev/api/v1/waitlists/WAITLIST_ID/signups/SIGNUP_ID" \
+  -H "Authorization: Bearer pk_live_YOUR_API_KEY"
+```
+
+### Example Response
+
+```json
+{
+  "signup": {
+    "id": "789e0123-e89b-12d3-a456-426614174000",
+    "email": "user@example.com",
+    "name": "John Doe",
+    "position": 1,
+    "referral_code": "ABC123",
+    "referral_url": "https://www.referralloop.dev/w/product-launch?ref=ABC123",
+    "referral_count": 5,
+    "status": "waiting",
+    "created_at": "2024-01-15T10:00:00Z"
+  }
+}
+```
+
+---
+
+## Create Signup
+
+Add a new signup to a waitlist.
+
+<Endpoint method="POST" url="/waitlists/{waitlistId}/signups" />
+
+### Path Parameters
+
+<ParamField name="waitlistId" type="string" required>
+  The ID of the waitlist
+</ParamField>
+
+### Request Body
+
+<ParamField name="email" type="string" required>
+  Email address of the signup
+</ParamField>
+
+<ParamField name="name" type="string" required>
+  Full name of the signup
+</ParamField>
+
+<ParamField name="metadata" type="object">
+  Optional custom data object to store additional information
+</ParamField>
+
+<ParamField name="customFields" type="object">
+  Optional custom fields (will be merged into metadata)
+</ParamField>
+
+### Example Request
+
+```bash
+curl -X POST "https://www.referralloop.dev/api/v1/waitlists/WAITLIST_ID/signups" \
+  -H "Authorization: Bearer pk_live_YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "name": "John Doe",
+    "metadata": {
+      "source": "landing_page"
+    }
+  }'
+```
+
+### Example Response
+
+```json
+{
+  "signup": {
+    "id": "789e0123-e89b-12d3-a456-426614174000",
+    "email": "user@example.com",
+    "name": "John Doe",
+    "position": 151,
+    "referral_code": "XYZ789",
+    "referral_url": "https://www.referralloop.dev/w/product-launch?ref=XYZ789",
+    "created_at": "2024-01-15T10:00:00Z"
+  }
+}
+```
+
+<Warning>
+  If the email already exists on the waitlist, you'll receive a `409 Conflict` response with the existing signup information.
+</Warning>
+
+---
+
+## Delete Signup
+
+Remove a signup from a waitlist.
+
+<Endpoint method="DELETE" url="/waitlists/{waitlistId}/signups/{signupId}" />
+
+### Path Parameters
+
+<ParamField name="waitlistId" type="string" required>
+  The ID of the waitlist
+</ParamField>
+
+<ParamField name="signupId" type="string" required>
+  The ID of the signup to delete
+</ParamField>
+
+### Example Request
+
+```bash
+curl -X DELETE "https://www.referralloop.dev/api/v1/waitlists/WAITLIST_ID/signups/SIGNUP_ID" \
+  -H "Authorization: Bearer pk_live_YOUR_API_KEY"
+```
+
+### Response
+
+Returns `204 No Content` on success.
+
+---
+
+## Signup Object
+
+<ResponseField name="id" type="string" required>
+  Unique identifier for the signup
+</ResponseField>
+
+<ResponseField name="email" type="string" required>
+  Email address of the signup
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Full name of the signup
+</ResponseField>
+
+<ResponseField name="position" type="number" required>
+  Current position in the waitlist
+</ResponseField>
+
+<ResponseField name="referral_code" type="string" required>
+  Unique referral code for this signup
+</ResponseField>
+
+<ResponseField name="referral_url" type="string">
+  Full URL for the referral link
+</ResponseField>
+
+<ResponseField name="referral_count" type="number">
+  Number of referrals made by this signup
+</ResponseField>
+
+<ResponseField name="status" type="string" required>
+  Status of the signup (`waiting`, `approved`, `rejected`)
+</ResponseField>
+
+<ResponseField name="created_at" type="string" required>
+  ISO 8601 timestamp when the signup was created
+</ResponseField>
+
+<ResponseField name="metadata" type="object">
+  Custom metadata associated with the signup
+</ResponseField>
+

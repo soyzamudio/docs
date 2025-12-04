@@ -1,0 +1,51 @@
+---
+title: Getting Started
+description: Learn how to get started with the ReferralLoop API
+---
+
+## Overview
+
+The ReferralLoop API allows you to integrate waitlist and referral functionality into your application. This guide will help you make your first API request.
+
+## Prerequisites
+
+- A ReferralLoop account
+- A paid subscription (API access is not available on the free plan)
+
+## Step 1: Generate an API Key
+
+1. Log in to your [ReferralLoop dashboard](https://www.referralloop.dev/dashboard)
+2. Navigate to **API Keys** in the sidebar
+3. Click **Create API Key**
+4. Give your key a descriptive name
+5. Copy the API key immediately - you won't be able to see it again
+
+<Warning>
+  Keep your API keys secure. Never commit them to version control or expose them
+  in client-side code.
+</Warning>
+
+## Step 2: Make Your First Request
+
+Once you have your API key, you can start making requests to the API. Here's an example using cURL:
+
+```bash
+curl https://www.referralloop.dev/api/v1/waitlists \
+  -H "Authorization: Bearer pk_live_YOUR_API_KEY"
+```
+
+<Info>Replace `pk_live_YOUR_API_KEY` with your actual API key.</Info>
+
+## Base URL
+
+All API requests should be made to:
+
+```
+https://www.referralloop.dev/api/v1
+```
+
+## Next Steps
+
+- Learn about [authentication](/authentication)
+- Explore the [API reference](/api-reference/introduction)
+- Check out [rate limits](/rate-limits) for your plan
